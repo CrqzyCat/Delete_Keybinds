@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "delete_keybinds",
+  "version": "${version}",
+  "name": "Delete Keybinds",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/delete_keybinds/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-datagen": [
+      "me.delete_keybinds.delete_keybinds.client.Delete_keybindsDataGenerator"
+    ],
+    "client": [
+      "me.delete_keybinds.delete_keybinds.client.Delete_keybindsClient"
+    ],
+    "main": [
+      "me.delete_keybinds.delete_keybinds.Delete_keybinds"
+    ]
+  },
+  "mixins": [
+    "delete_keybinds.mixins.json",
+    {
+      "config": "delete_keybinds.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
