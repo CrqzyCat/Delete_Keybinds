@@ -14,7 +14,7 @@
       "me.delete_keybinds.delete_keybinds.client.Delete_keybindsDataGenerator"
     ],
     "client": [
-      "me.delete_keybinds.delete_keybinds.client.Delete_keybindsClient"
+      "me.delete_keybinds.delete_keybinds.client"
     ],
     "main": [
       "me.delete_keybinds.delete_keybinds.Delete_keybinds"
