@@ -5,6 +5,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import net.minecraft.client.gui.screen.option.ControlsListWidget;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(targets = "net.minecraft.client.gui.screen.option.ControlsListWidget$KeyBindingEntry")
+@Mixin(targets = "net.minecraft.client.gui.screen.option.KeyBindsScreen$ControlsList$KeyBindingEntry")
 public abstract class DeleteKeybindsClient {
 
     @Shadow @Final
@@ -24,7 +25,7 @@ public abstract class DeleteKeybindsClient {
     private ButtonWidget unbindButton;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void onInit(KeyBinding binding, Text bindingName, CallbackInfo ci) {
+    private void onInit(Object outer, KeyBinding binding, Text bindingName, CallbackInfo ci) {
         this.unbindButton = ButtonWidget.builder(
                 Text.literal("§c×"),
                 btn -> {
@@ -35,12 +36,11 @@ public abstract class DeleteKeybindsClient {
     }
 
     @Inject(
-            method = "render(Lnet/minecraft/client/gui/DrawContext;IIIIIIIZF)V",
+            method = "render(Lnet/minecraft/client/gui/DrawContext;IIIIIIZF)V",
             at = @At("TAIL")
     )
     private void onRender(
             DrawContext context,
-            int index,
             int y,
             int x,
             int entryWidth,
@@ -64,7 +64,7 @@ public abstract class DeleteKeybindsClient {
             cancellable = true
     )
     private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.unbindButton != null && this.unbindButton.mouseClicked(mouseX, mouseY, button)) {
+        if (this.unbindButton != null && this.unbindButton.mouseClicked(mouseX, mouseY)) {
             cir.setReturnValue(true);
         }
     }
