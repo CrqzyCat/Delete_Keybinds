@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 @Mixin(targets = "net.minecraft.client.gui.screen.option.ControlsListWidget$KeyBindingEntry")
-public abstract class Delete_keybindsClient {
+public abstract class DeleteKeybindsClient {
 
     @Shadow @Final
     private KeyBinding binding;

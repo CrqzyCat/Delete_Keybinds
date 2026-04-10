@@ -4,7 +4,7 @@
   "package": "me.delete_keybinds.delete_keybinds.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "Delete_keybindsClient"
+    "DeleteKeybindsClient"
   ],
   "injectors": {
     "defaultRequire": 1
