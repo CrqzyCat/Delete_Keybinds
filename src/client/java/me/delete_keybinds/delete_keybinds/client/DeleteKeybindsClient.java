@@ -27,6 +27,13 @@ public abstract class DeleteKeybindsClient {
     @Shadow @Final
     private ButtonWidget resetButton;
 
+    @Shadow @Final
+    private ButtonWidget editButton;
+
+    // ✅ Shadow update() — existiert in KeyBindingEntry direkt
+    @Shadow
+    protected abstract void update();
+
     @Unique
     private ButtonWidget unbindButton;
 
@@ -42,6 +49,8 @@ public abstract class DeleteKeybindsClient {
                 btn -> {
                     this.binding.setBoundKey(InputUtil.UNKNOWN_KEY);
                     KeyBinding.updateKeysByCode();
+                    // ✅ update() aktualisiert editButton Text und resetButton Status
+                    this.update();
                 }
         ).dimensions(0, 0, 20, 20).build();
     }
