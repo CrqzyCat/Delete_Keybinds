@@ -56,8 +56,7 @@ public abstract class DeleteKeybindsClient {
             CallbackInfo ci
     ) {
         if (this.unbindButton != null) {
-            // ✅ Rechts vom resetButton — kein Overlap mit editButton
-            this.unbindButton.setX(this.resetButton.getX() + this.resetButton.getWidth() + 5);
+            this.unbindButton.setX(this.resetButton.getX() - this.unbindButton.getWidth() - 5);
             this.unbindButton.setY(this.resetButton.getY());
             this.unbindButton.render(context, mouseX, mouseY, deltaTicks);
         }
@@ -66,7 +65,6 @@ public abstract class DeleteKeybindsClient {
     @Inject(method = "children()Ljava/util/List;", at = @At("RETURN"), cancellable = true)
     private void onChildren(CallbackInfoReturnable<List<Element>> cir) {
         if (this.unbindButton != null) {
-            // ✅ unbindButton zuerst — bekommt Klick-Priorität vor editButton
             ImmutableList.Builder<Element> list = ImmutableList.builder();
             list.add(this.unbindButton);
             list.addAll(cir.getReturnValue());
