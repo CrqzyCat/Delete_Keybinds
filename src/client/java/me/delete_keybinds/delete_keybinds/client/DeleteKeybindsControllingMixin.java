@@ -5,15 +5,17 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "com.blamejared.controlling.client.NewKeyBindsList$KeyBindEntry", require = 0)
+@Pseudo
+@Mixin(targets = "com.blamejared.controlling.client.NewKeyBindsList$KeyBindEntry", remap = false)
 public abstract class DeleteKeybindsControllingMixin {
 
     @Shadow @Final
@@ -28,7 +30,7 @@ public abstract class DeleteKeybindsControllingMixin {
     @Unique
     private ButtonWidget unbindButton;
 
-    @Inject(method = "<init>", at = @At("TAIL"), remap = false)
+    @Inject(method = "<init>", at = @At("TAIL"), require = 0, remap = false)
     private void onInit(CallbackInfo ci) {
         this.unbindButton = ButtonWidget.builder(
                 Text.literal("§c×"),
@@ -40,7 +42,7 @@ public abstract class DeleteKeybindsControllingMixin {
         ).dimensions(0, 0, 20, 20).build();
     }
 
-    @Inject(method = "render", at = @At("TAIL"), remap = false)
+    @Inject(method = "render", at = @At("TAIL"), require = 0, remap = false)
     private void onRender(
             DrawContext context,
             int mouseX,
