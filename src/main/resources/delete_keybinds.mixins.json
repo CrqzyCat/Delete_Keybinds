@@ -1,11 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "me.delete_keybinds.delete_keybinds.client",
+  "package": "me.delete_keybinds.delete_keybinds.mixins",
   "compatibilityLevel": "JAVA_21",
-  "client": [
-    "DeleteKeybindsClient"
-  ],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
   }
