@@ -53,15 +53,10 @@ public abstract class DeleteKeybindsClient {
         ).dimensions(0, 0, 20, 20).build();
     }
 
-    // MC 1.21.x Signatur: render(DrawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
+    // Tatsächliche Signatur laut Log: (DrawContext, int mouseX, int mouseY, boolean hovered, float tickDelta)
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(
             DrawContext context,
-            int index,
-            int y,
-            int x,
-            int entryWidth,
-            int entryHeight,
             int mouseX,
             int mouseY,
             boolean hovered,
