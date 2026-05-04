@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "com.blamejared.controlling.client.NewKeyBindsList$KeyEntry", remap = false)
 public abstract class DeleteKeybindsControllingMixin {
 
-    // Korrekte Feldnamen aus dem Controlling-Jar
     @Shadow
     private ButtonWidget btnResetKeyBinding;
 
@@ -27,14 +26,9 @@ public abstract class DeleteKeybindsControllingMixin {
     @Unique
     private ButtonWidget unbindButton;
 
-    // <init> Signatur: (NewKeyBindsList, KeyBinding, Text) -> void
+    // Kein direkter Import von Controlling nötig - Object als Typ für unbekannte Parameter
     @Inject(method = "<init>", at = @At("TAIL"), require = 0, remap = false)
-    private void onInit(
-            com.blamejared.controlling.client.NewKeyBindsList list,
-            KeyBinding key,
-            net.minecraft.text.Text text,
-            CallbackInfo ci
-    ) {
+    private void onInit(Object list, KeyBinding key, Text text, CallbackInfo ci) {
         this.unbindButton = ButtonWidget.builder(
                 Text.literal("§c×"),
                 btn -> {
@@ -44,7 +38,6 @@ public abstract class DeleteKeybindsControllingMixin {
         ).dimensions(0, 0, 20, 20).build();
     }
 
-    // render Signatur laut Jar: (DrawContext, int, int, boolean, float)
     @Inject(method = "render", at = @At("TAIL"), require = 0, remap = false)
     private void onRender(
             DrawContext context,
