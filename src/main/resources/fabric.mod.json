@@ -10,11 +10,11 @@
   "icon": "assets/delete_keybinds/icon.png",
   "environment": "client",
   "entrypoints": {
-    "fabric-datagen": [
-      "me.delete_keybinds.delete_keybinds.client.Delete_keybindsDataGenerator"
-    ],
     "main": [
       "me.delete_keybinds.delete_keybinds.Delete_keybinds"
+    ],
+    "client": [
+      "me.delete_keybinds.delete_keybinds.client.DeleteKeybindsClientInit"
     ]
   },
   "mixins": [
