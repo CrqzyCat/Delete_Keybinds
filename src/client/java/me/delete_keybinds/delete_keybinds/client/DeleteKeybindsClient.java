@@ -30,7 +30,6 @@ public abstract class DeleteKeybindsClient {
     @Shadow @Final
     private ButtonWidget editButton;
 
-    // ✅ Shadow update() — existiert in KeyBindingEntry direkt
     @Shadow
     protected abstract void update();
 
@@ -49,25 +48,30 @@ public abstract class DeleteKeybindsClient {
                 btn -> {
                     this.binding.setBoundKey(InputUtil.UNKNOWN_KEY);
                     KeyBinding.updateKeysByCode();
-                    // ✅ update() aktualisiert editButton Text und resetButton Status
                     this.update();
                 }
         ).dimensions(0, 0, 20, 20).build();
     }
 
+    // MC 1.21.x Signatur: render(DrawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(
             DrawContext context,
+            int index,
+            int y,
+            int x,
+            int entryWidth,
+            int entryHeight,
             int mouseX,
             int mouseY,
             boolean hovered,
-            float deltaTicks,
+            float tickDelta,
             CallbackInfo ci
     ) {
         if (this.unbindButton != null) {
             this.unbindButton.setX(this.resetButton.getX() - this.unbindButton.getWidth() - 5);
             this.unbindButton.setY(this.resetButton.getY());
-            this.unbindButton.render(context, mouseX, mouseY, deltaTicks);
+            this.unbindButton.render(context, mouseX, mouseY, tickDelta);
         }
     }
 
