@@ -26,18 +26,6 @@ public abstract class DeleteKeybindsControllingMixin {
     @Unique
     private ButtonWidget unbindButton;
 
-    // Kein direkter Import von Controlling nötig - Object als Typ für unbekannte Parameter
-    @Inject(method = "<init>", at = @At("TAIL"), require = 0, remap = false)
-    private void onInit(Object list, KeyBinding key, Text text, CallbackInfo ci) {
-        this.unbindButton = ButtonWidget.builder(
-                Text.literal("§c×"),
-                btn -> {
-                    this.key.setBoundKey(InputUtil.UNKNOWN_KEY);
-                    KeyBinding.updateKeysByCode();
-                }
-        ).dimensions(0, 0, 20, 20).build();
-    }
-
     @Inject(method = "render", at = @At("TAIL"), require = 0, remap = false)
     private void onRender(
             DrawContext context,
@@ -47,10 +35,21 @@ public abstract class DeleteKeybindsControllingMixin {
             float tickDelta,
             CallbackInfo ci
     ) {
-        if (this.unbindButton != null && this.btnResetKeyBinding != null) {
-            this.unbindButton.setX(this.btnResetKeyBinding.getX() - this.unbindButton.getWidth() - 5);
-            this.unbindButton.setY(this.btnResetKeyBinding.getY());
-            this.unbindButton.render(context, mouseX, mouseY, tickDelta);
+        if (this.btnResetKeyBinding == null) return;
+
+        // Lazy-Init: Button wird beim ersten render erstellt
+        if (this.unbindButton == null) {
+            this.unbindButton = ButtonWidget.builder(
+                    Text.literal("§c×"),
+                    btn -> {
+                        this.key.setBoundKey(InputUtil.UNKNOWN_KEY);
+                        KeyBinding.updateKeysByCode();
+                    }
+            ).dimensions(0, 0, 20, 20).build();
         }
+
+        this.unbindButton.setX(this.btnResetKeyBinding.getX() - this.unbindButton.getWidth() - 5);
+        this.unbindButton.setY(this.btnResetKeyBinding.getY());
+        this.unbindButton.render(context, mouseX, mouseY, tickDelta);
     }
 }
