@@ -6,7 +6,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,33 +14,37 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
-@Mixin(targets = "com.blamejared.controlling.client.NewKeyBindsList$KeyBindEntry", remap = false)
+@Mixin(targets = "com.blamejared.controlling.client.NewKeyBindsList$KeyEntry", remap = false)
 public abstract class DeleteKeybindsControllingMixin {
 
-    @Shadow @Final
-    private KeyBinding binding;
-
-    @Shadow @Final
-    private ButtonWidget resetButton;
+    // Korrekte Feldnamen aus dem Controlling-Jar
+    @Shadow
+    private ButtonWidget btnResetKeyBinding;
 
     @Shadow
-    protected abstract void update();
+    private KeyBinding key;
 
     @Unique
     private ButtonWidget unbindButton;
 
+    // <init> Signatur: (NewKeyBindsList, KeyBinding, Text) -> void
     @Inject(method = "<init>", at = @At("TAIL"), require = 0, remap = false)
-    private void onInit(CallbackInfo ci) {
+    private void onInit(
+            com.blamejared.controlling.client.NewKeyBindsList list,
+            KeyBinding key,
+            net.minecraft.text.Text text,
+            CallbackInfo ci
+    ) {
         this.unbindButton = ButtonWidget.builder(
                 Text.literal("§c×"),
                 btn -> {
-                    this.binding.setBoundKey(InputUtil.UNKNOWN_KEY);
+                    this.key.setBoundKey(InputUtil.UNKNOWN_KEY);
                     KeyBinding.updateKeysByCode();
-                    this.update();
                 }
         ).dimensions(0, 0, 20, 20).build();
     }
 
+    // render Signatur laut Jar: (DrawContext, int, int, boolean, float)
     @Inject(method = "render", at = @At("TAIL"), require = 0, remap = false)
     private void onRender(
             DrawContext context,
@@ -51,9 +54,9 @@ public abstract class DeleteKeybindsControllingMixin {
             float tickDelta,
             CallbackInfo ci
     ) {
-        if (this.unbindButton != null) {
-            this.unbindButton.setX(this.resetButton.getX() - this.unbindButton.getWidth() - 5);
-            this.unbindButton.setY(this.resetButton.getY());
+        if (this.unbindButton != null && this.btnResetKeyBinding != null) {
+            this.unbindButton.setX(this.btnResetKeyBinding.getX() - this.unbindButton.getWidth() - 5);
+            this.unbindButton.setY(this.btnResetKeyBinding.getY());
             this.unbindButton.render(context, mouseX, mouseY, tickDelta);
         }
     }
