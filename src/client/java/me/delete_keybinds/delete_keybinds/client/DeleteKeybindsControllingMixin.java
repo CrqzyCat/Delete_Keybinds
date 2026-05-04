@@ -17,11 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "com.blamejared.controlling.client.NewKeyBindsList$KeyEntry", remap = false)
 public abstract class DeleteKeybindsControllingMixin {
 
+    // Getter statt direktem @Shadow auf private Felder
     @Shadow
-    private ButtonWidget btnResetKeyBinding;
+    public abstract ButtonWidget getBtnResetKeyBinding();
 
     @Shadow
-    private KeyBinding key;
+    public abstract KeyBinding getKey();
 
     @Unique
     private ButtonWidget unbindButton;
@@ -35,21 +36,21 @@ public abstract class DeleteKeybindsControllingMixin {
             float tickDelta,
             CallbackInfo ci
     ) {
-        if (this.btnResetKeyBinding == null) return;
+        ButtonWidget resetBtn = this.getBtnResetKeyBinding();
+        if (resetBtn == null) return;
 
-        // Lazy-Init: Button wird beim ersten render erstellt
         if (this.unbindButton == null) {
             this.unbindButton = ButtonWidget.builder(
                     Text.literal("§c×"),
                     btn -> {
-                        this.key.setBoundKey(InputUtil.UNKNOWN_KEY);
+                        this.getKey().setBoundKey(InputUtil.UNKNOWN_KEY);
                         KeyBinding.updateKeysByCode();
                     }
             ).dimensions(0, 0, 20, 20).build();
         }
 
-        this.unbindButton.setX(this.btnResetKeyBinding.getX() - this.unbindButton.getWidth() - 5);
-        this.unbindButton.setY(this.btnResetKeyBinding.getY());
+        this.unbindButton.setX(resetBtn.getX() - this.unbindButton.getWidth() - 5);
+        this.unbindButton.setY(resetBtn.getY());
         this.unbindButton.render(context, mouseX, mouseY, tickDelta);
     }
 }
